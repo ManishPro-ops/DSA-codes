@@ -1,6 +1,6 @@
 #include <iostream>
 
-
+//creation of circular queue
 class MyCircularQueue {
 public:
     int size;
