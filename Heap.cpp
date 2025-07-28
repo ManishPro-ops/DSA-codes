@@ -1,91 +1,85 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Heap {
 public:
-    int size;
-    int arr[100];
+    vector<int> arr; // 1-based indexing
 
     Heap() {
-        arr[0] = -1; // Placeholder for 1-based indexing
-        size = 0;
+        arr.push_back(-1); // placeholder for index 0
     }
 
-    // Insert a value into the heap
+    // Insert into heap
     void insert(int val) {
-        size++;
-        int index = size;
-        arr[index] = val;
+        arr.push_back(val);
+        int index = arr.size() - 1;
 
-        while (index > 1) {
-            int parent = index / 2;
-            if (arr[parent] < arr[index]) {
-                swap(arr[parent], arr[index]);
-                index = parent;
-            } else {
-                return;
-            }
+        while (index > 1 && arr[index / 2] < arr[index]) {
+            swap(arr[index / 2], arr[index]);
+            index = index / 2;
         }
     }
 
-    // Delete the root of the heap
-    void deletefromheap() {
+    // Delete root
+    void deleteFromHeap() {
+        int size = arr.size() - 1;
         if (size == 0) {
-            cout << "Nothing to delete" << endl;
+            cout << "Nothing to delete\n";
             return;
         }
 
-        // Replace root with the last element and reduce size
+        // Move last element to root
         arr[1] = arr[size];
+        arr.pop_back();
         size--;
 
-        // Heapify down
         int i = 1;
-        while (i <= size) {
-            int leftindex = 2 * i;
-            int rightindex = 2 * i + 1;
+        while (true) {
+            int left = 2 * i;
+            int right = 2 * i + 1;
             int largest = i;
 
-            if (leftindex <= size && arr[leftindex] > arr[largest]) {
-                largest = leftindex;
-            }
-            if (rightindex <= size && arr[rightindex] > arr[largest]) {
-                largest = rightindex;
-            }
+            if (left <= size && arr[left] > arr[largest])
+                largest = left;
+            if (right <= size && arr[right] > arr[largest])
+                largest = right;
+
             if (largest != i) {
                 swap(arr[i], arr[largest]);
                 i = largest;
-            } else {
-                return;
-            }
+            } else
+                break;
         }
     }
 
-    // Print the heap
     void print() {
-        for (int i = 1; i <= size; i++) {
+        for (int i = 1; i < arr.size(); i++)
             cout << arr[i] << " ";
-        }
-        cout << endl;
+        cout << "\n";
     }
 };
 
-// Heapify a subtree rooted at index `i`
-void heapify(int arr[], int size, int i) {
+// Heapify for building heap from array
+void heapify(vector<int> &arr, int n, int i) {
     int largest = i;
     int left = 2 * i;
     int right = 2 * i + 1;
 
-    if (left <= size && arr[left] > arr[largest]) {
-        largest = left;
-    }
-    if (right <= size && arr[right] > arr[largest]) {
-        largest = right;
-    }
+    if (left <= n && arr[left] > arr[largest]) largest = left;
+    if (right <= n && arr[right] > arr[largest]) largest = right;
+
     if (largest != i) {
-        swap(arr[largest], arr[i]);
-        heapify(arr, size, largest); // Recursive call to heapify the affected subtree
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
     }
+}
+
+// Build heap from array
+void buildHeap(vector<int> &arr) {
+    int n = arr.size() - 1; // 1-based indexing
+    for (int i = n / 2; i > 0; i--)
+        heapify(arr, n, i);
 }
 
 int main() {
@@ -95,13 +89,28 @@ int main() {
     h.insert(20);
     h.insert(70);
     h.insert(77);
+    h.insert(30);
+    h.insert(20);
+    h.insert(10);
+    h.insert(5);
+
 
     cout << "Heap before deletion: ";
     h.print();
 
-    h.deletefromheap();
+    h.deleteFromHeap();
     cout << "Heap after deletion: ";
     h.print();
+    h.insert(80);
+    h.print();
+
+    // Example: building heap from an existing array
+    vector<int> arr = {-1, 10, 30, 20, 5, 50}; // 1-based indexing
+    buildHeap(arr);
+    cout << "Heap built from array: ";
+    for (int i = 1; i < arr.size(); i++)
+        cout << arr[i] << " ";
+    cout << "\n";
 
     return 0;
 }
