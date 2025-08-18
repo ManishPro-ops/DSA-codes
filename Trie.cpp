@@ -67,8 +67,8 @@ int main() {
     cout << (root->search(word3) ? "mango found\n" : "mango not found\n");   // Expected: found
 
     string prefix2="maal";
-    cout << (root->isprefix(word1) ? "manish exists\n" : "Prefix man doesn't exist\n"); // Expected: exists
-    cout << (root->isprefix(prefix2) ? "maal doesn't exists\n" : "maal doesn't exists\n"); // Expected: exists
+    cout << (root->isprefix(word1) ? "manish exists\n" : "Prefix manish doesn't exist\n"); // Expected: exists
+    cout << (root->isprefix(prefix2) ? "maal does exists\n" : "maal doesn't exists\n"); // Expected: exists
 
     return 0;
 }
